@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { UNSAFE_DataRouterStateContext, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import axios from 'axios';
 
 function Post() {
@@ -23,11 +23,23 @@ function Post() {
         axios.post("http://localhost:3001/comments", {
             commentBody: newComment, 
             PostId: id,
-        }).then((response)=>{
+        },
+        {
+            headers: {
+                accessToken: sessionStorage.getItem("accessToken"),
+            },
+        }
+        )
+        
+        .then((response)=>{
+            if(response.data.error) {
+                alert(response.data.error);
+            } else {
             // 바로 업데이트
             const commentToAdd = {commentBody: newComment}
             setComments([...comments, commentToAdd]);
             setNewComment("")
+            }
         })
     }
 
