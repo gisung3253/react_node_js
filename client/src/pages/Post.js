@@ -26,19 +26,19 @@ function Post() {
         },
         {
             headers: {
-                accessToken: sessionStorage.getItem("accessToken"),
+                accessToken: localStorage.getItem("accessToken"),
             },
         }
         )
         
         .then((response)=>{
             if(response.data.error) {
-                alert(response.data.error);
+                console.log(response.data.error);
             } else {
             // 바로 업데이트
-            const commentToAdd = {commentBody: newComment}
-            setComments([...comments, commentToAdd]);
-            setNewComment("")
+                const commentToAdd = {commentBody: newComment, username: response.data.username}
+                setComments([...comments, commentToAdd]);
+                setNewComment("")
             }
         })
     }
@@ -67,8 +67,9 @@ function Post() {
                 <div className="listOfComments">
                     {comments.map((comment, key)=>{
                         return(
-                            <div key={key} className="comment"> {
-                                comment.commentBody}
+                            <div key={key} className="comment"> 
+                                {comment.commentBody}
+                                <label> Username: {comment.username}</label>
                             </div>
                         );
                     })}
